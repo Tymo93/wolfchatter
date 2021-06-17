@@ -27,5 +27,5 @@ RUN npm cache clean --force
 # install all dependencies
 RUN yarn
 
-EXPOSE 3000
+# EXPOSE 3000
 CMD [ "yarn", "start:dev" ]

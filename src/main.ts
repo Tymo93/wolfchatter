@@ -11,6 +11,6 @@ async function bootstrap() {
   // Use static for front end
   app.useStaticAssets(join(__dirname, '..', 'static'))
 
-  await app.listen(parseInt(process.env.PORT))
+  await app.listen(parseInt(process.env.PORT) || 3000)
 }
 bootstrap()
