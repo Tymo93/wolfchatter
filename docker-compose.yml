@@ -1,0 +1,89 @@
+version: '3.7'
+# all the containers have to declare inside services
+services:
+  # DB service
+  mysql:
+    image: mysql:latest
+    ports:
+      - "33310:3306"
+    security_opt:
+      - seccomp:unconfined
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: BebPb9HghnV5QkJ3AZXvD7SMaTH3UQjH
+      MYSQL_DATABASE: wolfchatter_db
+    command: --default-authentication-plugin=mysql_native_password
+    volumes:
+      - wc-db-data:/var/lib/mysql
+    networks:
+      - wolfchat-network
+  # App service
+  wolfchat:
+    # application rely on redis and mysql running
+    depends_on:
+      - redis
+      - mysql
+    # this build context will take the commands from Dockerfile
+    build:
+      context: .
+      dockerfile: Dockerfile
+    # image name
+    image: wolfchatter-docker
+    # container name
+    container_name: wolfchat
+    # always restart the container if it stops.
+    restart: always
+    # docker run -t is allow
+    tty: true
+    # application port, this is take value from env file
+    ports:
+      - "${PORT}:${PORT}"
+    # working directory
+    working_dir: /var/www/wolfchatter
+    # application environment
+    environment:
+      SERVICE_NAME: wolfchat
+      SERVICE_TAGS: dev
+      REDIS_PORT: ${REDIS_PORT}
+      REDIS_HOST: ${REDIS_HOST}
+      DATABASE_HOST: mysql
+    # save (persist) data and also to share data between containers
+    volumes:
+      - ./:/var/www/wolfchatter
+      - /var/www/wolfchatter/node_modules
+      # application network, each container for a service joins this network
+    networks:
+      - wolfchat-network
+  # Redis service
+  redis:
+    # image name
+    image: redis:latest
+    # container name
+    container_name: redis
+    # execute the command once start redis container
+    command: [
+        "redis-server",
+        "--bind",
+        "redis",
+        "--port",
+        "6379"
+    ]
+    # save (persist) data and also to share data between containers
+    volumes:
+      - red_data:/var/lib/redis
+    # redis port, this is take value from env file
+    ports:
+      - '${REDIS_PORT}:${REDIS_PORT}'
+      # application network, each container for a service joins this network
+    networks:
+      - wolfchat-network
+
+  #Docker Networks
+networks:
+  # All container connect in a network
+  wolfchat-network:
+    driver: bridge
+# save (persist) data
+volumes:
+  red_data: {}
+  wc-db-data:

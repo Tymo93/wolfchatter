@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en" class="font-mono">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="tailwind.css">
+    <title>WolfChatter</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.1.0/dist/leaflet.css">
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script type="text/javascript" src="https://cdn.socket.io/socket.io-1.4.5.js"></script>
+    <script type="text/javascript" src="https://unpkg.com/leaflet@1.1.0/dist/leaflet.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+  </head>
+  <body class="max-h-screen">
+    <div id="app" class="container">
+      <div class="row relative z-10">
+        <div v-if="activeMarker === null" :class="{ 'absolute': true, 'right-8': true, 'top-0': true, 'bg-white': true, 'p-4': true, 'rounded': true }">
+          <h2 :class="{ 'relative': true, 'text-white': markersLoading }"><svg v-if="markersLoading" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="animate-spin h-5 w-5 wc--blue-colour absolute top-0 bottom-0 left-0 right-0 m-auto">
+            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+          </svg>Click on the map to start a chat.</h2>
+        </div>
+        <div :class="{ 'right-8': activeMarker !== null, 'chat-window-wrapper': true, 'absolute': true, 'top-0': true, 'bg-white': true, 'p-4': true, 'rounded': true }">
+          <h2 class="text-center mb-1">{{ activeMarker ? `Chatroom ${activeMarker.id}` : 'Select location from map' }}</h2>
+          <div id="status"></div>
+          <div id="chat">
+            <div class="card pb-4">
+              <div id="messages" ref="messages" class="card-block pr-2.5">
+                <ul>
+                  <li :class="{ 'break-words': true, relative: true, 'chat-bubble': !message.same_user, 'mt-2.5': true }" v-for="message of messages"><span v-if="!message.same_user" class="font-semibold">{{ message.user_name }}:</span> {{ message.message }}<span class="message-date absolute right-0 -bottom-3.5">{{ message.date_created | formatDate }}</span></li>
+                </ul>
+              </div>
+            </div>
+            <div v-if="!user_name_applied" class="input-wrapper my-4 relative">
+              <input 
+                type="text" v-model="user_name" 
+                id="username" :class="`form-control border pl-2 pr-8 h-8 w-full ${error ? 'error' : ''}`"
+                maxlength="25" @keyup.enter="applyAndFocus"
+                placeholder="write you user name here" @focusout="applyUserName">
+              <img v-if="user_name.trim().length > 0" @click="applyUserName" class="absolute top-1.5 right-1.5 w-5 cursor-pointer" src="./assets/svgs/checked.svg" />
+            </div>
+            <div v-else class="input-wrapper mb-4 flex justify-between content-center h-8">
+              <p class="m-0 pt-1">Posting as {{ user_name }}</p>
+              <button id="edit" class="btn text wc--blue-colour" @click.prevent="user_name_applied = false">edit</button>
+            </div>
+            <div class="input-wrapper flex justify-between content-center">
+              <textarea
+                id="textarea" ref="message"
+                :class="`form-control border px-2 h-8 pt-0.5 mx-auto ${error ? 'error' : ''}`" v-model="message"
+                placeholder="write message here" @focusin="applyUserName"
+                @keydown.enter.prevent="sendMessage"></textarea>
+              <button id="send" :disabled="user_name.length === 0 || message.length === 0" class="btn rounded bg-blue-700 text-white px-2" @click.prevent="sendMessage">Submit</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row w-full h-full absolute top-0 left-0 z-0">
+        <div id="map"></div>
+      </div>
+    </div>
+
+    <script src="main.js"></script>
+  </body>
+</html>
