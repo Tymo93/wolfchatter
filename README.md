@@ -10,4 +10,4 @@ docker compose build
 docker compose up
 ```
 
-Server will run on http://localhost:3000 unless .env is changed
+App will run on http://localhost:3000 unless .env is changed
