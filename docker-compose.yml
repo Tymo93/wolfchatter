@@ -17,6 +17,14 @@ services:
       - wc-db-data:/var/lib/mysql
     networks:
       - wolfchat-network
+  # Migration service
+  run-migrations:
+    image: wolfchatter-docker
+    depends_on:
+      - mysql
+    command: yarn migrate
+    networks:
+      - wolfchat-network
   # App service
   wolfchat:
     # application rely on redis and mysql running
