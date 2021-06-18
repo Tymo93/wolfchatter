@@ -21,6 +21,7 @@
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
+    "db:diagram": "yarn run tsc && typeorm-uml ormconfig.js",
     "db:migrate": "typeorm migration:run",
     "db:revert": "typeorm migration:revert",
     "migrate": "yarn tsc && yarn db:migrate",
