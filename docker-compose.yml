@@ -27,10 +27,11 @@ services:
       - wolfchat-network
   # App service
   wolfchat:
-    # application rely on redis and mysql running
+    # application rely on redis, mysql and migrations running
     depends_on:
       - redis
       - mysql
+      - run-migrations
     # this build context will take the commands from Dockerfile
     build:
       context: .
