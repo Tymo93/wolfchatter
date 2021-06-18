@@ -16,13 +16,16 @@
   <body class="max-h-screen">
     <div id="app" class="container">
       <div class="row relative z-10">
-        <div v-if="activeMarker === null" :class="{ 'absolute': true, 'right-8': true, 'top-0': true, 'bg-white': true, 'p-4': true, 'rounded': true }">
+        <div v-if="activeMarker === null" :class="{ 'absolute': true, 'right-2': true, 'sm:right-8': true, 'top-0': true, 'bg-white': true, 'p-4': true, 'rounded': true }">
           <h2 :class="{ 'relative': true, 'text-white': markersLoading }"><svg v-if="markersLoading" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="animate-spin h-5 w-5 wc--blue-colour absolute top-0 bottom-0 left-0 right-0 m-auto">
             <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
             <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
           </svg>Click on the map to start a chat.</h2>
         </div>
-        <div :class="{ 'right-8': activeMarker !== null, 'chat-window-wrapper': true, 'absolute': true, 'top-0': true, 'bg-white': true, 'p-4': true, 'rounded': true }">
+        <div :class="{ 'right-2': activeMarker !== null, 'sm:right-8': activeMarker !== null, 'chat-window-wrapper': true, 'absolute': true, 'top-0': true, 'bg-white': true, 'p-4': true, 'rounded': true }">
+          <div class="close-wrapper" @click="activeMarker = null">
+            <img class="absolute top-4 left-4 cursor-pointer" src="assets/svgs/close-button.svg" width="18" height="18" />
+          </div>
           <h2 class="text-center mb-1">{{ activeMarker ? `Chatroom ${activeMarker.id}` : 'Select location from map' }}</h2>
           <div id="status"></div>
           <div id="chat">

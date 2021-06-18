@@ -18009,7 +18009,7 @@ video {
 }
 
 .right-2 {
-  right: 0.5rem;
+  right: 0.5rem !important;
 }
 
 .bottom-2 {
@@ -47358,7 +47358,7 @@ video {
   }
 
   .sm\:right-8 {
-    right: 2rem;
+    right: 2rem !important;
   }
 
   .sm\:bottom-8 {

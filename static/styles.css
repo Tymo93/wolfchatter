@@ -1,5 +1,6 @@
 body {
   background: gray;
+  overflow: hidden;
 }
 
 /* Chat form */
@@ -27,6 +28,10 @@ textarea {
 .chat-window-wrapper .form-control.error {
   outline-color: red;
   border-color: red;
+}
+
+.chat-window-wrapper .close-wrapper {
+  display: none;
 }
 
 #textarea {
@@ -101,4 +106,24 @@ textarea {
 
 .wc--blue-colour {
   color: #2892fc;
+}
+
+@media only screen and (max-width: 768px) {
+  .chat-window-wrapper {
+    right: -100vw;
+  }
+
+  .chat-window-wrapper .close-wrapper {
+    display: block;
+  }
+}
+
+@media only screen and (max-width: 414px) {
+  #app.container {
+    margin-top: 1rem;
+  }
+  .chat-window-wrapper {
+    width: calc(100vw - 1rem);
+    margin-top: 4rem;
+  }
 }
